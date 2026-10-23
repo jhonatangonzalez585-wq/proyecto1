@@ -1,0 +1,10 @@
+Toy Story|Animacion,Comedia|81|1995|Todos|1400|Lunes
+Titanic|Drama,Romance|195|1997|12+|1600|Martes
+Avatar|Ciencia ficcion,Aventura|162|2009|12+|1800|Miercoles
+Coco|Animacion,Musical|105|2017|Todos|1500|Jueves
+Interestelar|Ciencia ficcion,Drama|169|2014|12+|1900|Viernes
+Shrek|Animacion,Comedia|90|2001|Todos|1300|Sabado
+Oppenheimer|Drama,Historia|180|2023|18+|1700|Domingo
+Inception|Ciencia ficcion,Accion|148|2010|12+|2000|Lunes
+Up|Animacion,Aventura|96|2009|Todos|1100|Sabado
+Avengers Endgame|Accion,Ciencia ficcion|181|2019|12+|2100|Domingo
