@@ -1,15 +1,17 @@
 PROYECTO: AGENDA DE PELICULAS
 
 Archivos:
-- modulo_peliculas.py: funciones principales.
-- consola_peliculas.py: menu para usar la aplicacion desde CMD.
-- datos_peliculas.txt: datos de diez peliculas.
-- cargar_peliculas.py: script que muestra las peliculas cargadas.
-- prueba_peliculas.py: prueba las cuatro funciones principales.
+- modulo_peliculas.py: funciones principales de calculo y reglas de negocio.
+- consola_peliculas.py: menu interactivo por consola que delega la logica en modulo_peliculas.py.
+- datos_peliculas.txt: datos iniciales de peliculas.
+- cargar_peliculas.py: script independiente para verificar la lectura del archivo de datos.
+- prueba_peliculas.py: suite de pruebas automatizadas para todas las funciones del modulo.
 
 Como ejecutar:
-1. Abre CMD en esta carpeta.
-2. Ejecuta: python consola_peliculas.py
-3. Usa las opciones del menu.
-4. Para ver el cargador por separado: python cargar_peliculas.py
-5. Para probar las funciones principales: python prueba_peliculas.py
+1. Abre tu terminal o CMD en esta carpeta.
+2. Para usar la aplicacion interactiva:
+   python consola_peliculas.py
+3. Para ejecutar la suite completa de pruebas:
+   python prueba_peliculas.py
+4. Para ver las peliculas cargadas desde el archivo de datos:
+   python cargar_peliculas.py
