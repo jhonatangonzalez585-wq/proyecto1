@@ -25,7 +25,7 @@ def encontrar_pelicula(nombre_pelicula: str, p1: dict, p2: dict,
     if not nombre_pelicula:
         return None
 
-    nombre_buscado = nombre_pelicula.strip().lower()
+    nombre_buscado = str(nombre_pelicula).strip().lower()
     peliculas = [p1, p2, p3, p4, p5]
 
     for p in peliculas:
@@ -51,7 +51,7 @@ def encontrar_pelicula_mas_larga(p1: dict, p2: dict, p3: dict,
 
 def duracion_promedio_peliculas(p1: dict, p2: dict, p3: dict,
                                 p4: dict, p5: dict) -> str:
-    """Devuelve la duracion promedio de las peliculas en formato HH:MM."""
+    """Calcula y devuelve la duracion promedio de las peliculas en formato HH:MM."""
     peliculas = [p for p in (p1, p2, p3, p4, p5) if p is not None]
     if not peliculas:
         return "00:00"
@@ -65,9 +65,10 @@ def duracion_promedio_peliculas(p1: dict, p2: dict, p3: dict,
 
 def encontrar_estrenos(p1: dict, p2: dict, p3: dict, p4: dict,
                        p5: dict, anio: int) -> str:
-    """Devuelve los nombres de peliculas estrenadas despues del anio indicado."""
+    """Lista los nombres de peliculas estrenadas despues del anio indicado."""
     peliculas = [p for p in (p1, p2, p3, p4, p5) if p is not None]
-    nombres = [p["nombre"] for p in peliculas if p.get("anio", 0) > anio]
+    anio_num = int(anio)
+    nombres = [p["nombre"] for p in peliculas if p.get("anio", 0) > anio_num]
 
     if len(nombres) == 0:
         return "Ninguna"
@@ -76,9 +77,12 @@ def encontrar_estrenos(p1: dict, p2: dict, p3: dict, p4: dict,
 
 def cuantas_peliculas_18_mas(p1: dict, p2: dict, p3: dict,
                              p4: dict, p5: dict) -> int:
-    """Cuenta peliculas con clasificacion 18+."""
+    """Cuenta cuantas peliculas tienen clasificacion 18+."""
     peliculas = [p for p in (p1, p2, p3, p4, p5) if p is not None]
-    cantidad = sum(1 for p in peliculas if str(p.get("clasificacion", "")).strip() == "18+")
+    cantidad = sum(
+        1 for p in peliculas
+        if str(p.get("clasificacion", "")).strip() in ("18+", "+18", "18")
+    )
     return cantidad
 
 
@@ -89,25 +93,26 @@ def reagendar_pelicula(peli: dict, nueva_hora: int, nuevo_dia: str,
     if peli is None:
         return False
 
-    if nueva_hora < 0 or nueva_hora > 2359:
+    hora_int = int(nueva_hora)
+    if hora_int < 0 or hora_int > 2359:
         return False
 
-    if nueva_hora % 100 >= 60:
+    if hora_int % 100 >= 60:
         return False
 
-    if control_horario and (nueva_hora < 800 or nueva_hora > 2200):
+    if bool(control_horario) and (hora_int < 800 or hora_int > 2200):
         return False
 
-    dia_limpio = nuevo_dia.strip().lower()
+    dia_limpio = str(nuevo_dia).strip().lower()
     peliculas = [p for p in (p1, p2, p3, p4, p5) if p is not None]
 
     for pelicula in peliculas:
         if pelicula != peli and pelicula.get("dia", "").strip().lower() == dia_limpio:
-            if pelicula.get("hora") == nueva_hora:
+            if pelicula.get("hora") == hora_int:
                 return False
 
-    peli["hora"] = nueva_hora
-    peli["dia"] = nuevo_dia.strip().capitalize()
+    peli["hora"] = hora_int
+    peli["dia"] = str(nuevo_dia).strip().capitalize()
     return True
 
 
@@ -117,19 +122,22 @@ def decidir_invitar(peli: dict, edad_invitado: int,
     if peli is None:
         return False
 
+    edad = int(edad_invitado)
+    autorizacion = bool(autorizacion_padres)
+
     # Regla 1: Mayores de edad pueden ver cualquier pelicula
-    if edad_invitado >= 18:
+    if edad >= 18:
         return True
 
     genero_pelicula = peli.get("genero", "").lower()
     clasificacion = peli.get("clasificacion", "").strip()
 
     # Regla 2: Menores de 15 anos no pueden ver peliculas de Terror
-    if edad_invitado < 15 and "terror" in genero_pelicula:
+    if edad < 15 and "terror" in genero_pelicula:
         return False
 
     # Regla 3: Menores de 10 anos o menos solo pueden ver peliculas Familiares
-    if edad_invitado <= 10 and "familiar" not in genero_pelicula:
+    if edad <= 10 and "familiar" not in genero_pelicula:
         return False
 
     # Regla 4: Validacion por clasificacion de edad y excepcion de Documental
@@ -138,12 +146,18 @@ def decidir_invitar(peli: dict, edad_invitado: int,
     if clasificacion == "Todos":
         return True
     elif clasificacion == "7+":
-        return edad_invitado >= 7 or autorizacion_padres or es_documental
+        return edad >= 7 or autorizacion or es_documental
     elif clasificacion in ("12+", "13+"):
-        return edad_invitado >= 12 or autorizacion_padres or es_documental
+        return edad >= 12 or autorizacion or es_documental
     elif clasificacion in ("15+", "16+"):
-        return edad_invitado >= 15 or autorizacion_padres or es_documental
-    elif clasificacion == "18+":
-        return edad_invitado >= 18 or autorizacion_padres or es_documental
+        return edad >= 15 or autorizacion or es_documental
+    elif clasificacion in ("18+", "+18", "18"):
+        return edad >= 18 or autorizacion or es_documental
 
     return False
+
+
+# Alias de funciones por compatibilidad con diferentes enunciados de la guia
+calcular_duracion_promedio = duracion_promedio_peliculas
+listar_estrenos = encontrar_estrenos
+contar_peliculas_18_mas = cuantas_peliculas_18_mas
